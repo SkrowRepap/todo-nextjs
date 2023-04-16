@@ -6,11 +6,9 @@ import {
   Container,
   Flex,
   Heading,
-  IconButton,
-  ResponsiveValue,
-  Spacer,
 } from "@chakra-ui/react";
 import React from "react";
+import style from "../styles/Custom.module.css";
 
 type Props = {};
 
@@ -61,6 +59,8 @@ const TagList = ({ props }: { props: TagProps[] }) => {
         minW={"0"}
         overflow={"auto"}
         scrollSnapType={"x"}
+        className={style.scrollGutter}
+        p="2"
       >
         {props.map((tag) => (
           <Tag color={tag.color} name={tag.name} key={tag.color} />
