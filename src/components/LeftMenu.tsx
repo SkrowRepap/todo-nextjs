@@ -14,6 +14,25 @@ import React from "react";
 
 type Props = {};
 
+const TagArray: TagProps[] = [
+  {
+    name: "work",
+    color: "yellow.500",
+  },
+  {
+    name: "school",
+    color: "red.500",
+  },
+  {
+    name: "home",
+    color: "teal.500",
+  },
+  {
+    name: "workout",
+    color: "orange.500",
+  },
+];
+
 type TagProps = {
   name: string;
   color: string;
@@ -22,7 +41,7 @@ type TagProps = {
 const Tag = (props: TagProps) => {
   return (
     <>
-      <Flex gap="3.5" align={"center"}>
+      <Flex gap="3.5" align={"center"} scrollSnapAlign={"start"}>
         <Circle size="30px" bg={props.color} />
         <Heading fontSize="md" fontWeight={"medium"}>
           {props.name}
@@ -32,11 +51,29 @@ const Tag = (props: TagProps) => {
   );
 };
 
+const TagList = ({ props }: { props: TagProps[] }) => {
+  return (
+    <>
+      <Flex
+        direction={{ base: "row", md: "column" }}
+        gap="7"
+        justify={"start"}
+        minW={"0"}
+        overflow={"auto"}
+        scrollSnapType={"x"}
+      >
+        {props.map((tag) => (
+          <Tag color={tag.color} name={tag.name} key={tag.color} />
+        ))}
+      </Flex>
+    </>
+  );
+};
+
 const Head = () => {
   return (
     <>
       <Flex align={"center"} mb={"2"}>
-        {/* <Spacer /> */}
         <Button
           aria-label="Add Tag"
           leftIcon={<AddIcon />}
@@ -58,9 +95,7 @@ function LeftMenu({}: Props) {
         <Container>
           <Flex direction={"column"} gap="6">
             <Head />
-            <Tag color="yellow.500" name="work" />
-            <Tag color="red.500" name="school" />
-            <Tag color="teal.500" name="home" />
+            <TagList props={TagArray} />
             <Checkbox colorScheme="blackAlpha" mt={"4"}>
               Hide Done Tasks
             </Checkbox>

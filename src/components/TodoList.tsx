@@ -8,7 +8,7 @@ function TodoList({}: Props) {
   return (
     <>
       <Flex flex={"8"}>
-        <Wrap spacing="30px" p={"4"}>
+        <Wrap spacing="30px" p={"3"} justify={{ base: "center", md: "start" }}>
           <Todo />
           <Todo />
           <Todo />
