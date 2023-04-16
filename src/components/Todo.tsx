@@ -81,7 +81,12 @@ const Tags = () => {
 function Todo({}: Props) {
   return (
     <>
-      <Container background="yellow.100" p="6" shadow={"md"}>
+      <Container
+        background="yellow.100"
+        p="6"
+        shadow={"md"}
+        maxW={{ base: "xs", md: "sm" }}
+      >
         <Flex direction={"column"} gap="4">
           <Flex align={"center"}>
             <Heading size="md">Todo Title</Heading>

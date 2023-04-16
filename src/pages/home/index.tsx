@@ -16,7 +16,12 @@ const Home: NextPageWithLayout = ({}: Props) => {
       <Head>
         <title>Home</title>
       </Head>
-      <Flex p={4} gap={"6"} py="6">
+      <Flex
+        p={4}
+        gap={"6"}
+        py="6"
+        flexDirection={{ base: "column", md: "row" }}
+      >
         <LeftMenu />
         <TodoList />
       </Flex>
