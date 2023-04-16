@@ -1,6 +1,7 @@
 import { Flex, Wrap } from "@chakra-ui/react";
 import React from "react";
 import Todo from "./Todo";
+import style from "../styles/Custom.module.css";
 
 type Props = {};
 
