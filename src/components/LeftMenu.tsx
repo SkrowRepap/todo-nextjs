@@ -57,7 +57,8 @@ const TagList = ({ props }: { props: TagProps[] }) => {
         gap="7"
         justify={"start"}
         minW={"0"}
-        overflow={"auto"}
+        overflow={"hidden"}
+        _hover={{ overflowX: "auto" }}
         scrollSnapType={"x"}
         className={style.scrollGutter}
         p="2"
