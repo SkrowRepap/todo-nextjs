@@ -1,6 +1,5 @@
 "use client";
 
-import { AddIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
@@ -10,6 +9,7 @@ import {
   Input,
   InputGroup,
   InputLeftAddon,
+  MenuItem,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -17,33 +17,44 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Textarea,
   useDisclosure,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useEffect } from "react";
 import { Heading } from "@chakra-ui/react";
 import { useBoundStore } from "@/store/useStore";
-import { Todo } from "@/types/TodoTypes";
 import SelectTags from "./SelectTags";
+import { MdOutlineEditCalendar } from "react-icons/md";
+import { Todo } from "@/types/TodoTypes";
 
-function AddTodoModal() {
+function EditTodoModal(props: Todo) {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const addTodo = useBoundStore((state) => state.addTodo);
+  const editTodo = useBoundStore((state) => state.editTodo);
+
   const [tags, setTags] = React.useState<string[]>([]);
-  console.log("🚀 ~ file: AddTodoModal.tsx:33 ~ AddTodoModal ~ tags:", tags);
-  const [title, setTitle] = React.useState<string>("");
-  const [description, setDescription] = React.useState<string>("");
   const [dateTime, setDateTime] = React.useState<string>("");
+  console.log(
+    "🚀 ~ file: EditTodoModal.tsx:35 ~ EditTodoModal ~ dateTime:",
+    dateTime
+  );
+
+  useEffect(() => {
+    setTags(props.tags);
+    setDateTime(() => {
+      let date = new Date(props.dateTime.replace("at ", ""));
+      const offset = date.getTimezoneOffset();
+      date = new Date(date.getTime() - offset * 60 * 1000);
+      return date.toISOString().slice(0, 16);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     try {
-      const todo: Todo = {
-        id: "",
-        title,
-        description,
-        tags,
-        completed: false,
+      editTodo(props.id, {
+        ...props,
+        tags: tags,
         dateTime: new Date(dateTime).toLocaleDateString("en-US", {
           weekday: "long",
           month: "long",
@@ -52,12 +63,11 @@ function AddTodoModal() {
           hour: "2-digit",
           minute: "2-digit",
         }),
-      };
-      addTodo(todo);
+      });
+
       setTags([]);
-      setTitle("");
-      setDescription("");
       setDateTime("");
+
       onClose();
     } catch (error) {
       console.log(error);
@@ -71,13 +81,9 @@ function AddTodoModal() {
   ) => {
     const { name, value } = e.target;
     switch (name) {
-      case "title":
-        setTitle(value);
-        break;
-      case "description":
-        setDescription(value);
-        break;
       case "dateTime":
+        console.log(value, typeof value);
+
         setDateTime(value);
         break;
       case "tags":
@@ -90,9 +96,13 @@ function AddTodoModal() {
 
   return (
     <>
-      <Button colorScheme="yellow" onClick={onOpen} leftIcon={<AddIcon />}>
-        Add Todo
-      </Button>
+      <MenuItem
+        onClick={onOpen}
+        icon={<MdOutlineEditCalendar size={"1em"} />}
+        command="E"
+      >
+        Edit...
+      </MenuItem>
       <Modal
         isOpen={isOpen}
         onClose={onClose}
@@ -105,39 +115,14 @@ function AddTodoModal() {
         <ModalContent>
           <form onSubmit={handleSubmit}>
             <ModalHeader>
-              <Box p="2">
-                <Heading>Add Todo</Heading>
-              </Box>
+              <Heading size={"md"}>Editing {props.title}...</Heading>
             </ModalHeader>
             <ModalCloseButton />
             <ModalBody>
               <Flex direction="column" gap="4">
                 <FormControl>
-                  <FormLabel>Title</FormLabel>
-                  <Input
-                    placeholder="Take a shower"
-                    type="text"
-                    name="title"
-                    value={title}
-                    onChange={handleChange}
-                    required
-                  />
-                </FormControl>
-
-                <FormControl>
-                  <FormLabel>Description</FormLabel>
-                  <Textarea
-                    placeholder="Take a shower at 6:00 p.m."
-                    name="description"
-                    value={description}
-                    onChange={handleChange}
-                    required
-                  />
-                </FormControl>
-
-                <FormControl>
                   <FormLabel>Tags</FormLabel>
-                  <SelectTags setTags={setTags} />
+                  <SelectTags setTags={setTags} selectedTags={tags} />
                 </FormControl>
 
                 <FormControl>
@@ -159,8 +144,8 @@ function AddTodoModal() {
             </ModalBody>
 
             <ModalFooter>
-              <Button colorScheme="yellow" px={7} mr={3} type="submit">
-                Add
+              <Button colorScheme="green" px={7} mr={3} type="submit">
+                Edit
               </Button>
               <Button onClick={onClose}>Cancel</Button>
             </ModalFooter>
@@ -171,4 +156,4 @@ function AddTodoModal() {
   );
 }
 
-export default AddTodoModal;
+export default EditTodoModal;
