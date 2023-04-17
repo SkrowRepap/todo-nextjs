@@ -4,6 +4,7 @@ import type { AppProps } from "next/app";
 import { ReactElement, ReactNode } from "react";
 import { extendTheme } from "@chakra-ui/react";
 import { checkboxTheme } from "@/components/Theme/CheckboxTheme";
+import { ToggleShowTodoProvider } from "@/context/ToggleShowTodo";
 
 export const theme = extendTheme({
   components: { Checkbox: checkboxTheme },
@@ -21,8 +22,9 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
   const getLayout = Component.getLayout ?? ((page) => page);
   return (
     <ChakraProvider theme={theme}>
-      {getLayout(<Component {...pageProps} />)}
+      <ToggleShowTodoProvider>
+        {getLayout(<Component {...pageProps} />)}
+      </ToggleShowTodoProvider>
     </ChakraProvider>
   );
 }
-

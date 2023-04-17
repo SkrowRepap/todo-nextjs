@@ -1,4 +1,3 @@
-import { AddIcon } from "@chakra-ui/icons";
 import {
   Button,
   Checkbox,
@@ -6,37 +5,18 @@ import {
   Container,
   Flex,
   Heading,
+  IconButton,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useContext } from "react";
 import style from "../styles/Custom.module.css";
+import { Tag } from "@/types/TodoTypes";
+import { useBoundStore } from "@/store/useStore";
+import { ToggleShowTodoContext } from "@/context/ToggleShowTodo";
+import { AiOutlineTags } from "react-icons/ai";
 
 type Props = {};
 
-const TagArray: TagProps[] = [
-  {
-    name: "work",
-    color: "yellow.500",
-  },
-  {
-    name: "school",
-    color: "red.500",
-  },
-  {
-    name: "home",
-    color: "teal.500",
-  },
-  {
-    name: "workout",
-    color: "orange.500",
-  },
-];
-
-type TagProps = {
-  name: string;
-  color: string;
-};
-
-const Tag = (props: TagProps) => {
+const Tag = (props: Tag) => {
   return (
     <>
       <Flex gap="3.5" align={"center"} scrollSnapAlign={"start"}>
@@ -49,7 +29,9 @@ const Tag = (props: TagProps) => {
   );
 };
 
-const TagList = ({ props }: { props: TagProps[] }) => {
+const TagList = () => {
+  const taglist = useBoundStore((state) => state.tags);
+  const hasHydrated = useBoundStore((state) => state.hasHydrated);
   return (
     <>
       <Flex
@@ -63,41 +45,40 @@ const TagList = ({ props }: { props: TagProps[] }) => {
         className={style.scrollGutter}
         p="2"
       >
-        {props.map((tag) => (
-          <Tag color={tag.color} name={tag.name} key={tag.color} />
-        ))}
-      </Flex>
-    </>
-  );
-};
-
-const Head = () => {
-  return (
-    <>
-      <Flex align={"center"} mb={"2"}>
-        <Button
-          aria-label="Add Tag"
-          leftIcon={<AddIcon />}
-          variant={"solid"}
-          colorScheme="teal"
-          w="full"
-        >
-          Add Tag
-        </Button>
+        {hasHydrated === false ? (
+          <>Loading...</>
+        ) : (
+          <>
+            {taglist.map((tag) => (
+              <Tag color={tag.color} name={tag.name} key={tag.id} id={tag.id} />
+            ))}
+          </>
+        )}
       </Flex>
     </>
   );
 };
 
 function LeftMenu({}: Props) {
+  const toggleHideDoneTasks = useContext(ToggleShowTodoContext);
   return (
     <>
       <Flex flex={"1"}>
-        <Container>
+        <Container py="4">
           <Flex direction={"column"} gap="6">
-            <Head />
-            <TagList props={TagArray} />
-            <Checkbox colorScheme="blackAlpha" mt={"4"}>
+            <TagList />
+            <Button
+              aria-label="Add Tag"
+              colorScheme="twitter"
+              rightIcon={<AiOutlineTags />}
+            >
+              Add Tag
+            </Button>
+            <Checkbox
+              colorScheme="blackAlpha"
+              mt={"4"}
+              onChange={(e) => toggleHideDoneTasks.toggleShowHidden()}
+            >
               Hide Done Tasks
             </Checkbox>
           </Flex>
