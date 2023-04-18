@@ -23,10 +23,9 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import { BsThreeDots } from "react-icons/bs";
-import { MdOutlineEditCalendar, MdOutlineDeleteSweep } from "react-icons/md";
 import { Todo } from "@/types/TodoTypes";
 import { useBoundStore } from "@/store/useStore";
-import ConfirmDeleteModal from "./Modals/ConfirmDeleteModal";
+import ConfirmDeleteModal from "./Modals/ConfirmDeleteTodoModal";
 import { CheckIcon, CloseIcon } from "@chakra-ui/icons";
 import EditTodoModal from "./Modals/EditTodoModal";
 
