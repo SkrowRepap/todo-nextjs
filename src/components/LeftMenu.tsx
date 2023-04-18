@@ -6,25 +6,67 @@ import {
   Flex,
   Heading,
   IconButton,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Spacer,
+  useBoolean,
 } from "@chakra-ui/react";
 import React, { useContext } from "react";
 import style from "../styles/Custom.module.css";
 import { Tag } from "@/types/TodoTypes";
 import { useBoundStore } from "@/store/useStore";
 import { ToggleShowTodoContext } from "@/context/ToggleShowTodo";
-import { AiOutlineTags } from "react-icons/ai";
+import AddTagModal from "./Modals/AddTagModal";
+import { AddIcon } from "@chakra-ui/icons";
+import { BsThreeDotsVertical } from "react-icons/bs";
+import ConfirmDeleteTagModal from "./Modals/ConfirmDeleteTagModal";
 
 type Props = {};
 
 const Tag = (props: Tag) => {
+  const [hover, setHover] = useBoolean(false);
   return (
     <>
-      <Flex gap="3.5" align={"center"} scrollSnapAlign={"start"}>
+      <Flex
+        gap="3.5"
+        align={"center"}
+        scrollSnapAlign={"start"}
+        onMouseOver={() => setHover.on()}
+        onMouseLeave={() => setHover.off()}
+        w="full"
+        grow={0}
+      >
         <Circle size="30px" bg={props.color} />
         <Heading fontSize="md" fontWeight={"medium"}>
           {props.name}
         </Heading>
+        <Spacer />
+        {hover && <TagMenu id={props.id} />}
+        {/* <TagMenu /> */}
       </Flex>
+    </>
+  );
+};
+
+const TagMenu = ({ id }: { id: string }) => {
+  return (
+    <>
+      <Menu placement="bottom-end">
+        <MenuButton
+          as={IconButton}
+          aria-label="Options"
+          icon={<BsThreeDotsVertical size={"1em"} />}
+          variant="none"
+          h="fit-content"
+          minW="fit-content"
+        ></MenuButton>
+
+        <MenuList>
+          <ConfirmDeleteTagModal id={id} />
+        </MenuList>
+      </Menu>
     </>
   );
 };
@@ -63,26 +105,18 @@ function LeftMenu({}: Props) {
   const toggleHideDoneTasks = useContext(ToggleShowTodoContext);
   return (
     <>
-      <Flex flex={"1"}>
-        <Container py="4">
-          <Flex direction={"column"} gap="6">
-            <TagList />
-            <Button
-              aria-label="Add Tag"
-              colorScheme="twitter"
-              rightIcon={<AiOutlineTags />}
-            >
-              Add Tag
-            </Button>
-            <Checkbox
-              colorScheme="blackAlpha"
-              mt={"4"}
-              onChange={(e) => toggleHideDoneTasks.toggleShowHidden()}
-            >
-              Hide Done Tasks
-            </Checkbox>
-          </Flex>
-        </Container>
+      <Flex flex={"1.2"} grow={0} justify={"center"} ml="2">
+        <Flex direction={"column"} gap="6" grow={0} py={"4"} w={"full"}>
+          <TagList />
+          <AddTagModal />
+          <Checkbox
+            colorScheme="blackAlpha"
+            mt={"4"}
+            onChange={(e) => toggleHideDoneTasks.toggleShowHidden()}
+          >
+            Hide Done Tasks
+          </Checkbox>
+        </Flex>
       </Flex>
     </>
   );
