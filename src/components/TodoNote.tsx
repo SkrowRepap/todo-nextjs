@@ -19,6 +19,7 @@ import {
   Wrap,
   WrapItem,
   useBoolean,
+  useColorModeValue,
   useOutsideClick,
 } from "@chakra-ui/react";
 import React from "react";
@@ -65,6 +66,7 @@ const TodoMenu = ({ id, title, todo }: TodoMenuProps) => {
           variant="none"
           height={"fit-content"}
           alignSelf={"start"}
+          color={"black"}
         ></MenuButton>
 
         <MenuList>
@@ -106,6 +108,7 @@ const Editable = (props: EditableProps) => {
           onChange={(e) => props.setCurrText(e.target.value)}
           readOnly={false}
           autoFocus={true}
+          color={"black"}
           onKeyDown={(e) => {
             if (e.key === "Enter") {
               props.editTodo();
@@ -121,6 +124,7 @@ const Editable = (props: EditableProps) => {
           onChange={(e) => props.setCurrText(e.target.value)}
           readOnly={false}
           autoFocus={true}
+          color={"black"}
         />
       )}
       <ButtonGroup justifyContent={"end"} size={"sm"}>
@@ -155,6 +159,8 @@ function TodoNote(props: Todo) {
 
   const editTodo = useBoundStore((state) => state.editTodo);
 
+  const bg = useColorModeValue("yellow.200", "yellow.300");
+
   useOutsideClick({
     ref: textareaRef,
     handler: () => setOnDscEdit.off(),
@@ -163,7 +169,7 @@ function TodoNote(props: Todo) {
   return (
     <>
       <Container
-        background="yellow.100"
+        background={bg}
         p="6"
         shadow={"md"}
         w={{ base: "xs", md: "sm" }}
@@ -178,6 +184,7 @@ function TodoNote(props: Todo) {
                     size="md"
                     textDecoration={`${checked && "line-through"}`}
                     onDoubleClick={() => setOnTitleEdit.on()}
+                    color={"black"}
                   >
                     {props.title}
                   </Heading>
@@ -212,6 +219,7 @@ function TodoNote(props: Todo) {
               <Text
                 textDecoration={`${checked && "line-through"}`}
                 onDoubleClick={() => setOnDscEdit.on()}
+                color={"black"}
               >
                 {props.description}
               </Text>

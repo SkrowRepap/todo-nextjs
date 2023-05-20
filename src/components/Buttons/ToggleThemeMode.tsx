@@ -12,6 +12,7 @@ function ToggleThemeMode() {
       aria-label="DarkMode"
       icon={colorMode === "light" ? <MoonIcon /> : <SunIcon />}
       onClick={() => toggleColorMode()}
+      color={"black"}
     />
   );
 }
